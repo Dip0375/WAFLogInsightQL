@@ -71,7 +71,7 @@ fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as coun
 | limit 10000
 ```
 
-## 8. AFPL WAF Report for BLOCK V1.0
+## 8. WAF Report for BLOCK V1.0
 
 ```ql
 fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as country, httpRequest.uri as ReqUrl, 
@@ -80,7 +80,7 @@ fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as coun
 | limit 100
 ```
 
-## 9. AFPL WAF Report for BLOCK V2.0
+## 9. WAF Report for BLOCK V2.0
 
 ```ql
 fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as country, httpRequest.uri as ReqUrl
@@ -92,12 +92,23 @@ fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as coun
 | limit 10000
 ```
 
-## 10. AFPL WAF Report for BLOCK V3.0
+## 10. WAF Report for BLOCK V3.0
 
 ```ql
 fields @timestamp as DateTime, httpRequest.clientIp as SourceIp, httpRequest.country as Country, action as Action, httpRequest.uri as RequestUrl, terminatingRuleId as TerminatingRuleId
 | sort @timestamp desc
 | filter action = 'BLOCK'
+| parse @message /\{"name":"(U|u)ser-(A|a)gent","value":"(?<userAgent>.*?)"\}/
+| parse @message '{"name":"Host","value":"*"}' as Host
+| display DateTime, SourceIp, Country, Action, RequestUrl, TerminatingRuleId, userAgent, Host, labels.0.name, labels.1.name, labels.2.name
+| limit 10000
+```
+
+## 11. WAF Report for ALL logs
+
+```ql
+fields @timestamp as DateTime, httpRequest.clientIp as SourceIp, httpRequest.country as Country, action as Action, httpRequest.uri as RequestUrl, terminatingRuleId as TerminatingRuleId
+| sort @timestamp desc
 | parse @message /\{"name":"(U|u)ser-(A|a)gent","value":"(?<userAgent>.*?)"\}/
 | parse @message '{"name":"Host","value":"*"}' as Host
 | display DateTime, SourceIp, Country, Action, RequestUrl, TerminatingRuleId, userAgent, Host, labels.0.name, labels.1.name, labels.2.name
