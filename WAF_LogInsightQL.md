@@ -98,8 +98,8 @@ fields @timestamp, httpRequest.clientIp as clientIp, httpRequest.country as coun
 fields @timestamp as DateTime, httpRequest.clientIp as SourceIp, httpRequest.country as Country, action as Action, httpRequest.uri as RequestUrl, terminatingRuleId as TerminatingRuleId
 | sort @timestamp desc
 | filter action = 'BLOCK'
-| parse @message /\{"name":"(U|u)ser-(A|a)gent","value":"(?<userAgent>.*?)"\}/ as UserAgent
+| parse @message /\{"name":"(U|u)ser-(A|a)gent","value":"(?<userAgent>.*?)"\}/
 | parse @message '{"name":"Host","value":"*"}' as Host
-| display DateTime, SourceIp, Country, Action, RequestUrl, TerminatingRuleId, UserAgent, Host, labels.0.name, labels.1.name, labels.2.name
+| display DateTime, SourceIp, Country, Action, RequestUrl, TerminatingRuleId, userAgent, Host, labels.0.name, labels.1.name, labels.2.name
 | limit 10000
 ```
